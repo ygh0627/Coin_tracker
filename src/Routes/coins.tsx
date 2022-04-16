@@ -1,11 +1,12 @@
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { useState } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useSetRecoilState } from "recoil";
 import { isDarkAtom } from "../atoms";
+import { motion, AnimatePresence } from "framer-motion";
 
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
@@ -27,11 +28,11 @@ const Header = styled.header`
   position: relative;
 `;
 
-const CoinList = styled.ul`
+const CoinList = styled(motion.ul)`
   padding: 0px 20px;
 `;
 
-const Coin = styled.li`
+const Coin = styled(motion.li)`
   background-color: ${(props) => props.theme.cardBgColor};
   color: ${(props) => props.theme.textColor};
   border-radius: 15px;
@@ -103,12 +104,25 @@ const Button = styled.span`
   cursor: pointer;
 `;
 
+const rowVariants = {
+  hidden: {
+    x: window.outerWidth,
+  },
+  visible: {
+    x: 0,
+  },
+  exit: {
+    x: -window.outerWidth,
+  },
+};
+
 const OFFSET = 6;
+
 function Coins() {
   const setterFn = useSetRecoilState(isDarkAtom);
-
   const { data, isLoading } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
   const [counter, setCounter] = useState(0);
+
   return (
     <Container>
       <HelmetProvider>
@@ -122,32 +136,42 @@ function Coins() {
         <ToggleButton onClick={() => setterFn((prev) => !prev)}>
           Toggle
         </ToggleButton>
+
         {isLoading ? (
           <Loader>Loading...</Loader>
         ) : (
-          <CoinList>
-            {data
-              ?.slice(0, 100)
-              .slice(OFFSET * counter, OFFSET * counter + OFFSET)
-              .map((coin) => (
-                <Coin key={coin.id}>
-                  <Link
-                    to={{
-                      pathname: `/${coin.id}`,
-                      state: { name: coin.name, coinId: coin.id },
-                    }}
-                  >
-                    <CoinWrapper>
-                      <CoinImage
-                        alt="coin images"
-                        src={`https://cryptocurrencyliveprices.com/img/${coin?.id}.png`}
-                      />
-                      {coin.name} &rarr;
-                    </CoinWrapper>
-                  </Link>
-                </Coin>
-              ))}
-          </CoinList>
+          <AnimatePresence initial={false}>
+            <CoinList
+              key={counter}
+              variants={rowVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              transition={{ duration: 1 }}
+            >
+              {data
+                ?.slice(0, 100)
+                .slice(OFFSET * counter, OFFSET * counter + OFFSET)
+                .map((coin) => (
+                  <Coin key={coin.id} whileHover={{ scale: 1.1 }}>
+                    <Link
+                      to={{
+                        pathname: `/${coin.id}`,
+                        state: { name: coin.name, coinId: coin.id },
+                      }}
+                    >
+                      <CoinWrapper>
+                        <CoinImage
+                          alt="coin images"
+                          src={`https://cryptocurrencyliveprices.com/img/${coin?.id}.png`}
+                        />
+                        {coin.name} &rarr;
+                      </CoinWrapper>
+                    </Link>
+                  </Coin>
+                ))}
+            </CoinList>
+          </AnimatePresence>
         )}
         <ButtonBox>
           <Button
