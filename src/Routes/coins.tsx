@@ -40,7 +40,6 @@ const Coin = styled(motion.li)`
   border: 1px solid white;
   a {
     padding: 20px;
-    transition: color 0.2s ease-in;
     display: block;
   }
   &:hover {
@@ -104,25 +103,13 @@ const Button = styled.span`
   cursor: pointer;
 `;
 
-const rowVariants = {
-  hidden: {
-    x: window.outerWidth,
-  },
-  visible: {
-    x: 0,
-  },
-  exit: {
-    x: -window.outerWidth,
-  },
-};
-
 const OFFSET = 6;
 
 function Coins() {
   const setterFn = useSetRecoilState(isDarkAtom);
   const { data, isLoading } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
   const [counter, setCounter] = useState(0);
-
+  const [page, setPage] = useState({ count: 0, left: false });
   return (
     <Container>
       <HelmetProvider>
@@ -141,44 +128,53 @@ function Coins() {
           <Loader>Loading...</Loader>
         ) : (
           <AnimatePresence initial={false}>
-            <CoinList
-              key={counter}
-              variants={rowVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              transition={{ duration: 1 }}
-            >
-              {data
-                ?.slice(0, 100)
-                .slice(OFFSET * counter, OFFSET * counter + OFFSET)
-                .map((coin) => (
-                  <Coin key={coin.id} whileHover={{ scale: 1.1 }}>
-                    <Link
-                      to={{
-                        pathname: `/${coin.id}`,
-                        state: { name: coin.name, coinId: coin.id },
-                      }}
-                    >
-                      <CoinWrapper>
-                        <CoinImage
-                          alt="coin images"
-                          src={`https://cryptocurrencyliveprices.com/img/${coin?.id}.png`}
-                        />
-                        {coin.name} &rarr;
-                      </CoinWrapper>
-                    </Link>
-                  </Coin>
-                ))}
-            </CoinList>
+            <div>
+              <CoinList
+                key={page.count}
+                initial={
+                  page.left
+                    ? { x: -window.outerWidth }
+                    : { x: window.outerWidth }
+                }
+                animate={{ x: 0 }}
+                exit={
+                  page.left
+                    ? { x: -window.outerWidth }
+                    : { x: -window.outerWidth }
+                }
+                transition={{ duration: 0.7 }}
+              >
+                {data
+                  ?.slice(0, 100)
+                  .slice(OFFSET * page.count, OFFSET * page.count + OFFSET)
+                  .map((coin) => (
+                    <Coin key={coin.id} whileHover={{ scale: 1.1 }}>
+                      <Link
+                        to={{
+                          pathname: `/${coin.id}`,
+                          state: { name: coin.name, coinId: coin.id },
+                        }}
+                      >
+                        <CoinWrapper>
+                          <CoinImage
+                            alt="coin images"
+                            src={`https://cryptocurrencyliveprices.com/img/${coin?.id}.png`}
+                          />
+                          {coin.name} &rarr;
+                        </CoinWrapper>
+                      </Link>
+                    </Coin>
+                  ))}
+              </CoinList>
+            </div>
           </AnimatePresence>
         )}
         <ButtonBox>
           <Button
             onClick={() =>
-              setCounter((curr) => {
-                if (curr <= 0) return 16;
-                return curr - 1;
+              setPage((curr) => {
+                if (curr.count <= 0) return { ...curr, left: true, count: 16 };
+                return { ...curr, left: true, count: curr.count-- };
               })
             }
           >
@@ -186,10 +182,9 @@ function Coins() {
           </Button>
           <Button
             onClick={() =>
-              setCounter((curr) => {
-                console.log(curr);
-                if (curr > 15) return 0;
-                return curr + 1;
+              setPage((curr) => {
+                if (curr.count > 15) return { ...curr, left: false, count: 0 };
+                return { ...curr, left: false, count: curr.count++ };
               })
             }
           >
