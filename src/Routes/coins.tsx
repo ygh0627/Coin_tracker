@@ -7,6 +7,7 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useSetRecoilState } from "recoil";
 import { isDarkAtom } from "../atoms";
 import { motion, AnimatePresence } from "framer-motion";
+import TypeIt from "typeit-react";
 
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
@@ -108,7 +109,7 @@ const OFFSET = 6;
 function Coins() {
   const setterFn = useSetRecoilState(isDarkAtom);
   const { data, isLoading } = useQuery<CoinInterface[]>("allCoins", fetchCoins);
-  const [counter, setCounter] = useState(0);
+
   const [page, setPage] = useState({ count: 0, left: false });
   return (
     <Container>
@@ -117,7 +118,23 @@ function Coins() {
           <title>Coins</title>
         </Helmet>
         <Header>
-          <Title>Coins</Title>
+          <Title>
+            <TypeIt
+              getBeforeInit={(instance) => {
+                instance
+                  .type("Hi, We're 코인")
+                  .pause(750)
+                  .delete(1)
+                  .pause(100)
+                  .delete(1)
+                  .pause(500)
+                  .type("Coins ")
+                  .pause(500)
+                  .type(":) ");
+                return instance;
+              }}
+            />
+          </Title>
         </Header>
 
         <ToggleButton onClick={() => setterFn((prev) => !prev)}>
@@ -173,7 +190,7 @@ function Coins() {
           <Button
             onClick={() =>
               setPage((curr) => {
-                if (curr.count <= 0) return { ...curr, left: true, count: 16 };
+                if (curr.count < 0) return { ...curr, left: true, count: 16 };
                 return { ...curr, left: true, count: curr.count-- };
               })
             }
@@ -183,7 +200,7 @@ function Coins() {
           <Button
             onClick={() =>
               setPage((curr) => {
-                if (curr.count > 15) return { ...curr, left: false, count: 0 };
+                if (curr.count > 16) return { ...curr, left: false, count: 0 };
                 return { ...curr, left: false, count: curr.count++ };
               })
             }

@@ -7,7 +7,7 @@ import Chart from "./Chart";
 import { useQuery } from "react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import { Helmet, HelmetProvider } from "react-helmet-async";
-
+import TypeIt from "typeit-react";
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
   font-size: 36px;
@@ -187,7 +187,15 @@ function Coin() {
         <GoBack onClick={() => history.push(`/`)}>↩︎</GoBack>
         <Header>
           <Title>
-            {state?.name ? state.name : loading ? "Loading" : infoData?.name}
+            <TypeIt
+              options={{
+                afterComplete: function ({ destroy }: any) {
+                  destroy();
+                },
+              }}
+            >
+              {state?.name ? state.name : loading ? "Loading" : infoData?.name}
+            </TypeIt>
           </Title>
           <CoinImage
             src={`https://cryptocurrencyliveprices.com/img/${coinId}.png`}
