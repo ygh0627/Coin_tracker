@@ -148,18 +148,18 @@ function Coins() {
             <div>
               <CoinList
                 key={page.count}
-                initial={
-                  page.left
-                    ? { x: -window.outerWidth }
-                    : { x: window.outerWidth }
-                }
-                animate={{ x: 0 }}
-                exit={
-                  page.left
-                    ? { x: -window.outerWidth }
-                    : { x: -window.outerWidth }
-                }
-                transition={{ duration: 0.7 }}
+                // initial={
+                //   page.left
+                //     ? { x: -window.outerWidth }
+                //     : { x: window.outerWidth }
+                // }
+                // animate={{ x: 0 }}
+                // exit={
+                //   page.left
+                //     ? { x: -window.outerWidth }
+                //     : { x: -window.outerWidth }
+                // }
+                // transition={{ duration: 0.7 }}
               >
                 {data
                   ?.slice(0, 100)
