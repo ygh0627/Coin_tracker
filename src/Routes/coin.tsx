@@ -187,13 +187,7 @@ function Coin() {
         <GoBack onClick={() => history.push(`/`)}>↩︎</GoBack>
         <Header>
           <Title>
-            <TypeIt
-              options={{
-                afterComplete: function ({ destroy }: any) {
-                  destroy();
-                },
-              }}
-            >
+            <TypeIt>
               {state?.name ? state.name : loading ? "Loading" : infoData?.name}
             </TypeIt>
           </Title>
