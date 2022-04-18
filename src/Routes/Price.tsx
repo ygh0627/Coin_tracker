@@ -11,7 +11,7 @@ const Container = styled.div``;
 const InfoContainer = styled(motion.div)``;
 
 const ChangeRate = styled(motion.div)`
-  background-color: #00ffc6;
+  background-color: rgba(0, 0, 0, 0.6);
   margin-bottom: 8px;
   width: 100%;
   height: 40px;
@@ -23,11 +23,11 @@ const ChangeRate = styled(motion.div)`
 `;
 
 const PureText = styled.span`
-  color: #733c3c;
+  color: white;
 `;
 
 const InfoText = styled.span<{ isMinus?: Boolean }>`
-  color: ${(props) => (props.isMinus ? "blue" : "red")};
+  color: ${(props) => (props.isMinus ? "skyBlue" : "red")};
 `;
 
 const boxVariants = {

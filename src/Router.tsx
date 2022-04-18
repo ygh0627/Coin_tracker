@@ -6,7 +6,7 @@ function Router() {
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL + "/"}>
       <Switch>
-        <Route path="/:coinId">
+        <Route path="/coins/:coinId/details">
           <Coin />
         </Route>
         <Route path="/">
