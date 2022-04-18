@@ -7,7 +7,7 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { useSetRecoilState } from "recoil";
 import { isDarkAtom } from "../atoms";
 import { motion, AnimatePresence } from "framer-motion";
-
+import TypeIt from "typeit-react";
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
   font-size: 48px;
@@ -118,7 +118,7 @@ function Coins() {
         </Helmet>
         <Header>
           <Title>
-            {/* <TypeIt
+            <TypeIt
               getBeforeInit={(instance) => {
                 instance
                   .type("Hi, We're 코인")
@@ -132,7 +132,7 @@ function Coins() {
                   .type(":) ");
                 return instance;
               }}
-            /> */}
+            />
           </Title>
         </Header>
 
