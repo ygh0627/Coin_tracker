@@ -1,6 +1,6 @@
-# 비트코인 가격 추적, 그래프를 이용한 시각화
+# Bitcoin price tracking and data visualization using ApexChart Library.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Tech Stacks - React, Typescript, Recoil, Styled-component, React-query 
 
 ## Available Scripts
 
