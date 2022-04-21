@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# 비트코인 가격 추적, 그래프를 이용한 시각화
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
